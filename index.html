@@ -29,8 +29,7 @@
   --radius-sm:6px;--radius:8px;--radius-lg:12px;--radius-xl:16px;
 }
 html{scroll-behavior:smooth;font-size:16px}
-body{font-family:var(--font-jp),var(--font-en);color:var(--slate600);background:var(--canvas);transition:background 0.6s;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-body.dark-section{background:var(--slate900)}
+body{font-family:var(--font-jp),var(--font-en);color:var(--slate600);background:var(--canvas);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
 /* ━━ Liquid Glass (shared) ━━ */
 .glass{
@@ -61,12 +60,11 @@ body.dark-section .nav-links a:hover{color:var(--teal-light)}
 @media(max-width:640px){.nav-links a:not(.nav-cta){display:none}}
 
 /* ━━ Video ━━ */
-.video-wrap{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:clamp(220px,32vw,360px);aspect-ratio:9/16;max-height:78vh;z-index:0;pointer-events:none;border-radius:26px;overflow:hidden;background:var(--slate900);box-shadow:0 40px 90px -30px rgba(10,22,40,0.3),0 18px 40px -20px rgba(10,22,40,0.15)}
+.video-wrap{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;background:var(--canvas)}
 .video-wrap video{width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;transition:opacity 0.8s}
-.video-wrap video.loaded{opacity:1}
-.video-wrap::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,0);transition:background 0.6s;pointer-events:none}
-body.dark-section .video-wrap::after{background:rgba(0,0,0,0.3)}
-@media(max-width:640px){.video-wrap{width:60vw;max-height:60vh}}
+.video-wrap video.loaded{opacity:0.32}
+.video-wrap::after{content:"";position:absolute;inset:0;background:rgba(250,251,252,0.55);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);transition:background 0.8s}
+body.dark-section .video-wrap::after{background:rgba(15,23,42,0.78)}
 
 .progress-bar{position:fixed;top:56px;left:0;height:2px;background:linear-gradient(90deg,var(--teal),#06b6d4);z-index:90;width:0%;transition:width 0.05s linear}
 
