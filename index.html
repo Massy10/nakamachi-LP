@@ -195,7 +195,7 @@ footer{position:relative;z-index:1;text-align:center;padding:28px 24px;backgroun
     例: src="https://stream.mux.com/xxxxx/high.mp4"
     または Cloudflare Stream / S3 + CloudFront
   -->
-  <video id="bgVideo" src="seedance2_Video_20260419_011949.mp4" autoplay muted playsinline preload="auto"></video>
+  <video id="bgVideo" src="seedance2_scroll.mp4" autoplay muted playsinline preload="auto"></video>
 </div>
 
 <nav class="section-dots" id="dots">
@@ -257,15 +257,15 @@ footer{position:relative;z-index:1;text-align:center;padding:28px 24px;backgroun
         <p>旅行・飲み会の割り勘をスマートに計算。iOS版も展開中。</p>
       </a>
       <a class="work-card glass fade-up d3" href="https://keisyakun.com" target="_blank" rel="noopener">
-        <div class="card-head"><img class="char-icon" src="Gemini_Generated_Image_sqgpnasqgpnasqgp.png" alt="計算君"><div><h3>計算君</h3><span class="url">keisyakun.com</span></div></div>
+        <div class="card-head"><img class="char-icon" src="Gemini_Generated_Image_sqgpnasqgpnasqgp.png" alt="ケイシャ君"><div><h3>ケイシャ君</h3><span class="url">keisyakun.com</span></div></div>
         <p>日常のあらゆる計算をかんたんに。便利な計算ツールコレクション。</p>
       </a>
       <a class="work-card glass fade-up d4" href="https://choseikun.com" target="_blank" rel="noopener">
-        <div class="card-head"><img class="char-icon" src="Gemini_Generated_Image_21mg8f21mg8f21mg.png" alt="調整君"><div><h3>調整君</h3><span class="url">choseikun.com</span></div></div>
+        <div class="card-head"><img class="char-icon" src="Gemini_Generated_Image_21mg8f21mg8f21mg.png" alt="チョウセイ君"><div><h3>チョウセイ君</h3><span class="url">choseikun.com</span></div></div>
         <p>グループの日程調整をシンプルに解決するWebサービス。</p>
       </a>
       <a class="work-card glass fade-up d5" href="https://keikakukun.com" target="_blank" rel="noopener">
-        <div class="card-head"><img class="char-icon" src="keikakukun.png" alt="計画君"><div><h3>計画君</h3><span class="url">keikakukun.com</span></div></div>
+        <div class="card-head"><img class="char-icon" src="keikakukun.png" alt="ケイカク君"><div><h3>ケイカク君</h3><span class="url">keikakukun.com</span></div></div>
         <p>計画・タスク管理を手軽に始められるプランニングツール。</p>
       </a>
     </div>
@@ -308,9 +308,9 @@ footer{position:relative;z-index:1;text-align:center;padding:28px 24px;backgroun
 <footer>
   <div class="footer-links">
     <a href="https://warikankun.com" target="_blank">ワリカン君</a>
-    <a href="https://keisyakun.com" target="_blank">計算君</a>
-    <a href="https://choseikun.com" target="_blank">調整君</a>
-    <a href="https://keikakukun.com" target="_blank">計画君</a>
+    <a href="https://keisyakun.com" target="_blank">ケイシャ君</a>
+    <a href="https://choseikun.com" target="_blank">チョウセイ君</a>
+    <a href="https://keikakukun.com" target="_blank">ケイカク君</a>
     <a href="#">note</a><a href="#">Zenn</a>
   </div>
   <p class="copy">&copy; 2026 ナカマチ. All rights reserved.</p>
@@ -323,55 +323,59 @@ footer{position:relative;z-index:1;text-align:center;padding:28px 24px;backgroun
       fadeEls=document.querySelectorAll('.fade-up'),
       dots=document.querySelectorAll('.section-dots .dot'),
       body=document.body;
-  var ready=false,seeking=false,pendingPct=null;
+  var ready=false,targetPct=0,rafLoop=null;
 
   function handleReady(){
     if(ready)return;
     try{video.pause();}catch(e){}
     video.classList.add('loaded');
     ready=true;
-    onScroll();
+    computeScroll();
+    if(!rafLoop)rafLoop=requestAnimationFrame(tick);
   }
   video.addEventListener('canplay',handleReady);
   video.addEventListener('loadeddata',handleReady);
   if(video.readyState>=3)handleReady();
 
-  video.addEventListener('seeked',function(){
-    seeking=false;
-    if(pendingPct!==null){
-      var p=pendingPct;pendingPct=null;
-      seekTo(p);
+  function computeScroll(){
+    var sy=window.scrollY,mx=document.documentElement.scrollHeight-window.innerHeight;
+    targetPct=mx>0?Math.min(Math.max(sy/mx,0),1):0;
+    progress.style.width=(targetPct*100)+'%';
+    var cur=0;
+    for(var i=0;i<sections.length;i++){if(sections[i].getBoundingClientRect().top<window.innerHeight*.45)cur=i}
+    if(cur>=3)body.classList.add('dark-section');else body.classList.remove('dark-section');
+    for(var j=0;j<dots.length;j++)dots[j].classList.toggle('active',j===cur);
+  }
+
+  function tick(){
+    if(ready&&video.duration&&isFinite(video.duration)){
+      var ct=video.currentTime,tt=video.duration*targetPct,diff=tt-ct;
+      if(Math.abs(diff)<0.03){
+        if(!video.paused){try{video.pause();}catch(e){}}
+      }else if(diff>0){
+        // 前進：差分に応じた再生速度で自然にフレームを流して追いつく
+        var rate=Math.min(Math.max(diff*2,1.2),8);
+        video.playbackRate=rate;
+        if(video.paused){var p=video.play();if(p&&p.catch)p.catch(function(){});}
+      }else{
+        // 後退：lerp で滑らかに seek（逆再生は安定しないため）
+        if(!video.paused){try{video.pause();}catch(e){}}
+        var nt=ct+diff*0.18;
+        if(nt<tt)nt=tt;
+        try{video.currentTime=nt;}catch(e){}
+      }
     }
-  });
-
-  function seekTo(pct){
-    if(!video.duration||!isFinite(video.duration))return;
-    if(seeking){pendingPct=pct;return;}
-    seeking=true;
-    try{video.currentTime=video.duration*pct;}catch(e){seeking=false;}
+    rafLoop=requestAnimationFrame(tick);
   }
 
-  var ticking=false;
-  function onScroll(){
-    if(ticking)return;ticking=true;
-    requestAnimationFrame(function(){
-      var sy=window.scrollY,mx=document.documentElement.scrollHeight-window.innerHeight,
-          pct=mx>0?Math.min(Math.max(sy/mx,0),1):0;
-      progress.style.width=(pct*100)+'%';
-      seekTo(pct);
-      var cur=0;
-      for(var i=0;i<sections.length;i++){if(sections[i].getBoundingClientRect().top<window.innerHeight*.45)cur=i}
-      if(cur>=3)body.classList.add('dark-section');else body.classList.remove('dark-section');
-      for(var j=0;j<dots.length;j++)dots[j].classList.toggle('active',j===cur);
-      ticking=false;
-    });
-  }
-  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('scroll',computeScroll,{passive:true});
+  window.addEventListener('resize',computeScroll);
   var obs=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.08,rootMargin:'0px 0px -30px 0px'});
   fadeEls.forEach(function(el){obs.observe(el)});
   dots.forEach(function(d){d.addEventListener('click',function(){sections[parseInt(d.dataset.index)].scrollIntoView({behavior:'smooth'})})});
   document.querySelectorAll('.nav-links a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();var t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'})})});
-  onScroll();video.addEventListener('loadedmetadata',onScroll);
+  computeScroll();
+  video.addEventListener('loadedmetadata',computeScroll);
 })();
 </script>
 </body>
