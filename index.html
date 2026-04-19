@@ -29,7 +29,8 @@
   --radius-sm:6px;--radius:8px;--radius-lg:12px;--radius-xl:16px;
 }
 html{scroll-behavior:smooth;font-size:16px}
-body{font-family:var(--font-jp),var(--font-en);color:var(--slate600);background:var(--canvas);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{font-family:var(--font-jp),var(--font-en);color:var(--slate600);background:var(--canvas);transition:background 0.6s;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body.dark-section{background:var(--slate900)}
 
 /* ━━ Liquid Glass (shared) ━━ */
 .glass{
@@ -60,11 +61,12 @@ body.dark-section .nav-links a:hover{color:var(--teal-light)}
 @media(max-width:640px){.nav-links a:not(.nav-cta){display:none}}
 
 /* ━━ Video ━━ */
-.video-wrap{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;background:var(--canvas)}
+.video-wrap{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:clamp(220px,32vw,360px);aspect-ratio:9/16;max-height:78vh;z-index:0;pointer-events:none;border-radius:26px;overflow:hidden;background:var(--slate900);box-shadow:0 40px 90px -30px rgba(10,22,40,0.3),0 18px 40px -20px rgba(10,22,40,0.15)}
 .video-wrap video{width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;transition:opacity 0.8s}
 .video-wrap video.loaded{opacity:1}
-.video-wrap::after{content:"";position:absolute;inset:0;background:rgba(250,251,252,0.5);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);transition:background 0.8s}
-body.dark-section .video-wrap::after{background:rgba(15,23,42,0.72)}
+.video-wrap::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,0);transition:background 0.6s;pointer-events:none}
+body.dark-section .video-wrap::after{background:rgba(0,0,0,0.3)}
+@media(max-width:640px){.video-wrap{width:60vw;max-height:60vh}}
 
 .progress-bar{position:fixed;top:56px;left:0;height:2px;background:linear-gradient(90deg,var(--teal),#06b6d4);z-index:90;width:0%;transition:width 0.05s linear}
 
@@ -323,7 +325,7 @@ footer{position:relative;z-index:1;text-align:center;padding:28px 24px;backgroun
       fadeEls=document.querySelectorAll('.fade-up'),
       dots=document.querySelectorAll('.section-dots .dot'),
       body=document.body;
-  var ready=false,targetPct=0,rafLoop=null;
+  var ready=false,targetPct=0,rafLoop=null,prevT=0;
 
   function handleReady(){
     if(ready)return;
@@ -331,6 +333,7 @@ footer{position:relative;z-index:1;text-align:center;padding:28px 24px;backgroun
     video.classList.add('loaded');
     ready=true;
     computeScroll();
+    prevT=performance.now();
     if(!rafLoop)rafLoop=requestAnimationFrame(tick);
   }
   video.addEventListener('canplay',handleReady);
@@ -347,7 +350,9 @@ footer{position:relative;z-index:1;text-align:center;padding:28px 24px;backgroun
     for(var j=0;j<dots.length;j++)dots[j].classList.toggle('active',j===cur);
   }
 
-  function tick(){
+  function tick(now){
+    var dt=(now-prevT)/1000;prevT=now;
+    if(dt>0.1)dt=0.1;
     if(ready&&video.duration&&isFinite(video.duration)){
       var ct=video.currentTime,tt=video.duration*targetPct,diff=tt-ct;
       if(Math.abs(diff)<0.03){
@@ -358,9 +363,9 @@ footer{position:relative;z-index:1;text-align:center;padding:28px 24px;backgroun
         video.playbackRate=rate;
         if(video.paused){var p=video.play();if(p&&p.catch)p.catch(function(){});}
       }else{
-        // 後退：lerp で滑らかに seek（逆再生は安定しないため）
+        // 後退：1倍速で逆再生（dt分だけ currentTime を戻す）
         if(!video.paused){try{video.pause();}catch(e){}}
-        var nt=ct+diff*0.18;
+        var nt=ct-dt;
         if(nt<tt)nt=tt;
         try{video.currentTime=nt;}catch(e){}
       }
