@@ -355,20 +355,14 @@ footer{position:relative;z-index:1;text-align:center;padding:28px 24px;backgroun
     var dt=(now-prevT)/1000;prevT=now;
     if(dt>0.1)dt=0.1;
     if(ready&&video.duration&&isFinite(video.duration)){
-      var ct=video.currentTime,tt=video.duration*targetPct,diff=tt-ct;
-      if(Math.abs(diff)<0.03){
-        if(!video.paused){try{video.pause();}catch(e){}}
-      }else if(diff>0){
-        // 前進：差分に応じた再生速度で自然にフレームを流して追いつく
-        var rate=Math.min(Math.max(diff*2,1.2),8);
-        video.playbackRate=rate;
-        if(video.paused){var p=video.play();if(p&&p.catch)p.catch(function(){});}
-      }else{
-        // 後退：前進と同じ rate で currentTime を dt × rate だけ戻す
-        if(!video.paused){try{video.pause();}catch(e){}}
-        var rrate=Math.min(Math.max(-diff*2,1.2),8);
-        var nt=ct-rrate*dt;
-        if(nt<tt)nt=tt;
+      if(!video.paused){try{video.pause();}catch(e){}}
+      var ct=video.currentTime,tt=video.duration*targetPct,diff=tt-ct,ad=Math.abs(diff);
+      if(ad>=0.03){
+        // 前進・後退ともに同じ rate×dt だけ currentTime を進める/戻す
+        var rate=Math.min(Math.max(ad*2,1.2),8);
+        var step=rate*dt*(diff>0?1:-1);
+        var nt=ct+step;
+        if((diff>0&&nt>tt)||(diff<0&&nt<tt))nt=tt;
         try{video.currentTime=nt;}catch(e){}
       }
     }
