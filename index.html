@@ -364,9 +364,10 @@ footer{position:relative;z-index:1;text-align:center;padding:28px 24px;backgroun
         video.playbackRate=rate;
         if(video.paused){var p=video.play();if(p&&p.catch)p.catch(function(){});}
       }else{
-        // 後退：1倍速で逆再生（dt分だけ currentTime を戻す）
+        // 後退：前進と同じ rate で currentTime を dt × rate だけ戻す
         if(!video.paused){try{video.pause();}catch(e){}}
-        var nt=ct-dt;
+        var rrate=Math.min(Math.max(-diff*2,1.2),8);
+        var nt=ct-rrate*dt;
         if(nt<tt)nt=tt;
         try{video.currentTime=nt;}catch(e){}
       }
