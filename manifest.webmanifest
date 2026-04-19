@@ -1,0 +1,16 @@
+{
+  "name": "ナカマチ — AI × 個人開発",
+  "short_name": "ナカマチ",
+  "description": "誰でも2日でプロダクトをリリース。AI × 個人開発のナカマチ。",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fafbfc",
+  "theme_color": "#0d9488",
+  "lang": "ja",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
