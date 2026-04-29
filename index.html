@@ -145,6 +145,7 @@ body.dark-section .dot::after{color:rgba(255,255,255,0.5)}
 .work-card p{font-size:15px;color:var(--slate400);line-height:1.7}
 .ios-launch{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 24px;border-radius:var(--radius-lg);text-decoration:none;color:inherit;margin-top:20px;margin-bottom:8px;transition:all .35s cubic-bezier(.22,1,.36,1)}
 .ios-launch:hover{transform:translateY(-3px);box-shadow:0 20px 48px -12px rgba(10,22,40,0.14),0 8px 20px -8px rgba(0,0,0,0.06);border-color:rgba(13,148,136,0.3)}
+.ios-launch-icon{width:72px;height:72px;border-radius:var(--radius-lg);object-fit:contain;flex-shrink:0}
 .ios-launch-text{flex:1;min-width:0}
 .ios-launch-text h3{font-size:18px;font-weight:600;color:var(--navy);margin:8px 0 4px;line-height:1.4}
 .ios-launch-text p{font-size:14px;color:var(--slate400);line-height:1.65}
@@ -152,6 +153,7 @@ body.dark-section .dot::after{color:rgba(255,255,255,0.5)}
 .badge-new{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.4px;background:linear-gradient(135deg,var(--teal),#06b6d4);color:#fff;vertical-align:middle;font-family:var(--font-en)}
 @media(max-width:640px){
   .ios-launch{flex-direction:column;align-items:flex-start;padding:18px 20px}
+  .ios-launch-icon{width:60px;height:60px}
   .app-store-badge{align-self:center;height:48px;margin-top:4px}
 }
 .other-projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px}
@@ -280,6 +282,7 @@ footer{position:relative;z-index:1;text-align:center;padding:28px 24px;backgroun
     <h2 class="fade-up d2 section-title">○○君エコノミー</h2>
     <p class="fade-up d2" style="color:var(--slate400);margin-bottom:4px">個人開発した4つのWebアプリ。</p>
     <a class="ios-launch glass fade-up d2" href="https://apps.apple.com/jp/app/%E3%83%AF%E3%83%AA%E3%82%AB%E3%83%B3%E5%90%9B-%E5%89%B2%E3%82%8A%E5%8B%98%E8%A8%88%E7%AE%97-%E6%97%85%E8%A1%8C%E7%B2%BE%E7%AE%97/id6759910931" target="_blank" rel="noopener">
+      <img class="ios-launch-icon" src="Gemini_Generated_Image_sqgpnasqgpnasqgp.png" alt="ワリカン君">
       <div class="ios-launch-text">
         <span class="badge badge-amber">NEW RELEASE</span>
         <h3>ワリカン君 iOS版、App Storeで公開中</h3>
