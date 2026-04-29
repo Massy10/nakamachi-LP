@@ -147,8 +147,9 @@ body.dark-section .dot::after{color:rgba(255,255,255,0.5)}
 .ios-launch:hover{transform:translateY(-3px);box-shadow:0 20px 48px -12px rgba(10,22,40,0.14),0 8px 20px -8px rgba(0,0,0,0.06);border-color:rgba(13,148,136,0.3)}
 .ios-launch-head{display:flex;align-items:center;gap:14px}
 .ios-launch-icon{width:64px;height:64px;border-radius:var(--radius-lg);object-fit:contain;flex-shrink:0}
-.ios-launch-title{display:flex;flex-direction:column;gap:6px;align-items:flex-start;min-width:0}
+.ios-launch-title{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:10px;min-width:0}
 .ios-launch-title h3{font-size:18px;font-weight:600;color:var(--navy);line-height:1.35;margin:0}
+.ios-launch-title .badge{padding:3px 10px;font-size:10px;letter-spacing:.5px}
 .ios-launch-desc{font-size:14px;color:var(--slate400);line-height:1.65;margin:0}
 .app-store-badge{align-self:flex-start;display:block;height:44px;width:auto;padding:4px}
 .badge-new{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.4px;background:linear-gradient(135deg,var(--teal),#06b6d4);color:#fff;vertical-align:middle;font-family:var(--font-en)}
@@ -286,8 +287,8 @@ footer{position:relative;z-index:1;text-align:center;padding:28px 24px;backgroun
       <div class="ios-launch-head">
         <img class="ios-launch-icon" src="Gemini_Generated_Image_sqgpnasqgpnasqgp.png" alt="ワリカン君">
         <div class="ios-launch-title">
-          <span class="badge badge-amber">NEW RELEASE</span>
           <h3>ワリカン君 iOS版</h3>
+          <span class="badge badge-amber">NEW RELEASE</span>
         </div>
       </div>
       <p class="ios-launch-desc">旅行・飲み会の割り勘をiPhoneでもっと手軽に。</p>
